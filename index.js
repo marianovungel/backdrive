@@ -1,12 +1,18 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
-require('dotenv').config()
 
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next)=>{
+  res.header("Access-Control-Allow-Origin", "/*");
+  res.header("Access-Control-Allow-Methods", 'GET,POST');
+  app.use(cors())
+  next();
+})
+app.use(cors())
 
 const uploadRouter = require('./router');
 
@@ -16,7 +22,7 @@ app.get('/', (req, res) => {
 
 app.use("/upload", uploadRouter);
 
-const port = process.env.PORT
-app.listen(8080, () => {
+const PORT=process.env.PORT
+app.listen(PORT, () => {
   console.log(`Form running on port ${process.env.PORT}`);
 });
